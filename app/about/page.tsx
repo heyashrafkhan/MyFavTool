@@ -26,15 +26,15 @@ const features = [
   },
   {
     icon: MessageCircle,
-    title: "Verify on WhatsApp",
+    title: "Open in WhatsApp",
     description:
-      "After validating the format, we query WhatsApp to check whether the number is actually registered.",
+      "Opens the number directly in WhatsApp. If the chat loads, the number is available — if it doesn't, it isn't.",
   },
   {
     icon: Lock,
-    title: "Private by design",
+    title: "100% private",
     description:
-      "Phone numbers are only used for the lookup and are never stored, logged, or shared beyond the check.",
+      "Everything runs in your browser. No phone numbers are stored, logged, or sent to any server.",
   },
   {
     icon: Zap,
@@ -49,13 +49,13 @@ const values = [
     icon: Eye,
     title: "Transparency",
     description:
-      "We explain exactly what the tool does: format validation plus a server-side WhatsApp lookup. No hidden logic.",
+      "We explain exactly what the tool does: format validation plus a direct WhatsApp link. No hidden logic.",
   },
   {
     icon: Heart,
     title: "User-first",
     description:
-      "The tool is free and fast. Your phone number is only used for the WhatsApp lookup and is never stored.",
+      "The tool is free, fast and respects your privacy. Your phone number data never leaves your device.",
   },
   {
     icon: Globe,

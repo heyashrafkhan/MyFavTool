@@ -225,7 +225,7 @@ export function validateNumber(input: string, country: Country): CheckResult {
     national,
     country,
     message: valid
-      ? `This ${country.name} number has the correct format (${length} digits). We'll check if it's on WhatsApp next.`
+      ? `This ${country.name} number has the correct format (${length} digits). Open it in WhatsApp to confirm it is available.`
       : `Invalid ${country.name} number. Expected ${min}${
           max === min ? "" : `–${max}`
         } digits, but got ${length}.`,
@@ -235,41 +235,4 @@ export function validateNumber(input: string, country: Country): CheckResult {
 /** Build a wa.me deep link that opens the number in WhatsApp. */
 export function waLink(e164: string): string {
   return `https://wa.me/${e164.replace(/\D/g, "")}`;
-}
-
-export type WhatsAppCheckResponse = {
-  registered: boolean | null;
-  error?: string;
-  notConfigured?: boolean;
-};
-
-export type WhatsAppCheckOutcome =
-  | { status: "yes" }
-  | { status: "no" }
-  | { status: "not-configured" }
-  | { status: "unknown" };
-
-/**
- * Call our server-side API to check whether a number is registered on
- * WhatsApp. Distinguishes between "not on WhatsApp", "lookup not configured",
- * and "could not determine".
- */
-export async function checkWhatsApp(e164: string): Promise<WhatsAppCheckOutcome> {
-  try {
-    const res = await fetch("/api/check-whatsapp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phone: e164 }),
-    });
-
-    if (res.status === 501) return { status: "not-configured" };
-    if (!res.ok) return { status: "unknown" };
-
-    const data: WhatsAppCheckResponse = await res.json();
-    if (data.registered === true) return { status: "yes" };
-    if (data.registered === false) return { status: "no" };
-    return { status: "unknown" };
-  } catch {
-    return { status: "unknown" };
-  }
 }
