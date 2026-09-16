@@ -1,0 +1,13 @@
+{
+  "id": "1",
+  "name": "Cursor",
+  "slug": "cursor",
+  "category": "Coding",
+  "description": "AI-first code editor built on VS Code that predicts your next edit and refactors entire functions from a prompt.",
+  "logo": "https://www.google.com/s2/favicons?domain=cursor.com&sz=128",
+  "url": "https://cursor.com",
+  "featured": true,
+  "dateAdded": "2026-08-28",
+  "popularity": 98,
+  "trending": true
+}

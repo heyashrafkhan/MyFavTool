@@ -1,0 +1,15 @@
+[
+  {
+    "id": "1",
+    "name": "WhatsApp Number Checker",
+    "slug": "whatsapp-number-checker",
+    "category": "Utilities",
+    "description": "Validate any phone number and instantly check whether it is active on WhatsApp — right from this site.",
+    "logo": "https://www.google.com/s2/favicons?domain=whatsapp.com&sz=128",
+    "url": "/#checker",
+    "featured": true,
+    "dateAdded": "2026-09-16",
+    "popularity": 100,
+    "trending": true
+  }
+]
