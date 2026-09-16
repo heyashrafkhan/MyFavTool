@@ -14,7 +14,7 @@ import { getCategories, totalTools } from "@/lib/tools";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Learn about MyFavTool and how our free WhatsApp Number Checker works.",
+    "Learn about MyFavTool and its free online tools — WhatsApp checker, IP lookup, email checker, currency converter and more.",
 };
 
 const features = [
@@ -75,15 +75,14 @@ export default function AboutPage() {
           About MyFavTool
         </h1>
         <p className="mt-4 text-base leading-relaxed text-ink-500">
-          MyFavTool is home to a free WhatsApp Number Checker that lets you
-          validate any phone number&apos;s format and then check whether it is
-          actually registered on WhatsApp.
+          MyFavTool is home to a growing collection of free online tools — a
+          WhatsApp Number Checker, IP Address Lookup, Email Checker, Currency
+          Converter, Company Lookup and Public Holidays finder.
         </p>
         <p className="mt-3 text-base leading-relaxed text-ink-500">
-          We built this tool because checking WhatsApp numbers shouldn&apos;t require
-          installing an app or creating an account. Just enter a number, and
-          we&apos;ll validate the format and check whether it&apos;s registered on
-          WhatsApp.
+          We built these tools because everyday utilities shouldn&apos;t require
+          installing an app or creating an account. Just open a tool, enter
+          your input, and get an answer instantly.
         </p>
       </div>
 

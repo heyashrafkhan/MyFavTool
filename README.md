@@ -73,31 +73,40 @@ Add, remove or edit entries there and the site updates automatically.
 3. Vercel auto-detects Next.js — no configuration needed.
 4. Deploy. The site is fully static-friendly and runs on Vercel's free (Hobby) plan.
 
-## WhatsApp Number Checker
+## Tools
 
-The WhatsApp checker validates the number format client-side, then provides
-an "Open in WhatsApp" button that opens the number in WhatsApp. If the chat
-loads, the number is registered — if not, it isn't.
+The site ships with six free tools, each backed by an
+[Abstract API](https://www.abstractapi.com/api) service:
 
-It also shows the **operator (carrier)** and **city** for the number via the
-[Abstract API Phone Intelligence](https://www.abstractapi.com/api/phone-intelligence-api)
-service (free tier: 100 lookups/month).
+| Tool | Page | API | Env var |
+|---|---|---|---|
+| WhatsApp Number Checker | `/#checker` | Phone Intelligence | `PHONE_VALIDATION_API_KEY` |
+| IP Address Lookup | `/tools/ip-lookup` | IP Geolocation | `IP_GEOLOCATION_API_KEY` |
+| Email Checker | `/tools/email-checker` | Email Validation | `EMAIL_VALIDATION_API_KEY` |
+| Currency Converter | `/tools/currency-converter` | Exchange Rates | `EXCHANGE_RATES_API_KEY` |
+| Company Lookup | `/tools/company-lookup` | Company Enrichment | `COMPANY_ENRICHMENT_API_KEY` |
+| Public Holidays | `/tools/holidays` | Public Holidays | `HOLIDAYS_API_KEY` |
 
 ### Setup (optional)
 
-1. Sign up for a free key at https://www.abstractapi.com/api/phone-intelligence-api
-2. Add it as an environment variable:
+Each tool needs its own free API key from the Abstract dashboard. Add them as
+environment variables:
 
-   ```bash
-   # local development
-   echo "PHONE_VALIDATION_API_KEY=your_key_here" > .env.local
+```bash
+# local development
+echo "PHONE_VALIDATION_API_KEY=your_key_here" > .env.local
+echo "IP_GEOLOCATION_API_KEY=your_key_here" >> .env.local
+echo "EMAIL_VALIDATION_API_KEY=your_key_here" >> .env.local
+echo "EXCHANGE_RATES_API_KEY=your_key_here" >> .env.local
+echo "COMPANY_ENRICHMENT_API_KEY=your_key_here" >> .env.local
+echo "HOLIDAYS_API_KEY=your_key_here" >> .env.local
 
-   # Vercel dashboard → Project → Settings → Environment Variables
-   # Name: PHONE_VALIDATION_API_KEY  Value: your_key_here
-   ```
+# Vercel dashboard → Project → Settings → Environment Variables
+# Add each key with the same names as above.
+```
 
-Without a key, the tool gracefully falls back to format-only validation and
-the "Open in WhatsApp" button — operator/city are simply hidden.
+Without a key, a tool gracefully falls back to a "not configured" notice —
+the rest of the site keeps working.
 
 ## Scripts
 

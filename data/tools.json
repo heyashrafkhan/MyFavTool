@@ -11,5 +11,70 @@
     "dateAdded": "2026-09-16",
     "popularity": 100,
     "trending": true
+  },
+  {
+    "id": "2",
+    "name": "IP Address Lookup",
+    "slug": "ip-address-lookup",
+    "category": "Utilities",
+    "description": "Look up any IP address to see its city, region, country, ISP and timezone.",
+    "logo": "https://www.google.com/s2/favicons?domain=abstractapi.com&sz=128",
+    "url": "/tools/ip-lookup",
+    "featured": true,
+    "dateAdded": "2026-09-16",
+    "popularity": 95,
+    "trending": true
+  },
+  {
+    "id": "3",
+    "name": "Email Checker",
+    "slug": "email-checker",
+    "category": "Utilities",
+    "description": "Check whether an email address is valid and deliverable — with MX records and disposable detection.",
+    "logo": "https://www.google.com/s2/favicons?domain=gmail.com&sz=128",
+    "url": "/tools/email-checker",
+    "featured": true,
+    "dateAdded": "2026-09-16",
+    "popularity": 90,
+    "trending": true
+  },
+  {
+    "id": "4",
+    "name": "Currency Converter",
+    "slug": "currency-converter",
+    "category": "Utilities",
+    "description": "Convert between 30+ world currencies with live exchange rates.",
+    "logo": "https://www.google.com/s2/favicons?domain=abstractapi.com&sz=128",
+    "url": "/tools/currency-converter",
+    "featured": true,
+    "dateAdded": "2026-09-16",
+    "popularity": 88,
+    "trending": true
+  },
+  {
+    "id": "5",
+    "name": "Company Lookup",
+    "slug": "company-lookup",
+    "category": "Utilities",
+    "description": "Enter a company domain to see its name, industry, size, location and more.",
+    "logo": "https://www.google.com/s2/favicons?domain=abstractapi.com&sz=128",
+    "url": "/tools/company-lookup",
+    "featured": false,
+    "dateAdded": "2026-09-16",
+    "popularity": 80,
+    "trending": false
+  },
+  {
+    "id": "6",
+    "name": "Public Holidays",
+    "slug": "public-holidays",
+    "category": "Utilities",
+    "description": "Find public holidays for any country and year.",
+    "logo": "https://www.google.com/s2/favicons?domain=abstractapi.com&sz=128",
+    "url": "/tools/holidays",
+    "featured": false,
+    "dateAdded": "2026-09-16",
+    "popularity": 75,
+    "trending": false
   }
 ]
