@@ -236,3 +236,38 @@ export function validateNumber(input: string, country: Country): CheckResult {
 export function waLink(e164: string): string {
   return `https://wa.me/${e164.replace(/\D/g, "")}`;
 }
+
+export type PhoneLookup = {
+  valid: boolean;
+  carrier: string | null;
+  location: string | null;
+  lineType: string | null;
+  countryCode: string | null;
+  countryName: string | null;
+};
+
+export type PhoneLookupOutcome =
+  | { status: "ok"; data: PhoneLookup }
+  | { status: "not-configured" }
+  | { status: "error" };
+
+/**
+ * Call our server-side API to look up the carrier and city for a number.
+ * Returns "not-configured" when no API key is set, so the UI can degrade
+ * gracefully to format-only validation.
+ */
+export async function lookupPhone(e164: string): Promise<PhoneLookupOutcome> {
+  try {
+    const res = await fetch("/api/lookup-phone", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone: e164 }),
+    });
+    if (res.status === 501) return { status: "not-configured" };
+    if (!res.ok) return { status: "error" };
+    const data: PhoneLookup = await res.json();
+    return { status: "ok", data };
+  } catch {
+    return { status: "error" };
+  }
+}

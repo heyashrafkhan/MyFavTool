@@ -2,11 +2,13 @@
 
 import { useMemo, useState } from "react";
 import {
+  Building2,
   CheckCircle2,
   ChevronDown,
   ExternalLink,
   Globe,
   Loader2,
+  MapPin,
   MessageCircle,
   Phone,
   ShieldCheck,
@@ -14,15 +16,18 @@ import {
 } from "lucide-react";
 import {
   countries,
+  lookupPhone,
   validateNumber,
   waLink,
   type CheckResult,
+  type PhoneLookupOutcome,
 } from "@/lib/phone";
 
 export function WhatsAppChecker() {
   const [countryCode, setCountryCode] = useState("US");
   const [number, setNumber] = useState("");
   const [result, setResult] = useState<CheckResult | null>(null);
+  const [lookup, setLookup] = useState<PhoneLookupOutcome | null>(null);
   const [checking, setChecking] = useState(false);
 
   const country = useMemo(
@@ -30,20 +35,25 @@ export function WhatsAppChecker() {
     [countryCode],
   );
 
-  function handleCheck(event: React.FormEvent<HTMLFormElement>) {
+  async function handleCheck(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setChecking(true);
+    setLookup(null);
     // Validate the number format against the selected country's rules.
-    window.setTimeout(() => {
-      setResult(validateNumber(number, country));
-      setChecking(false);
-    }, 300);
+    const res = validateNumber(number, country);
+    setResult(res);
+    // If the format is valid, look up the carrier and city server-side.
+    if (res.valid) {
+      setLookup(await lookupPhone(res.e164));
+    }
+    setChecking(false);
   }
 
   function handleNumberChange(value: string) {
     const cleaned = value.replace(/[^\d\s\-()+]/g, "");
     setNumber(cleaned);
     if (result) setResult(null);
+    if (lookup) setLookup(null);
   }
 
   return (
@@ -59,9 +69,9 @@ export function WhatsAppChecker() {
               Check a WhatsApp Number
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-ink-500">
-              Enter a phone number to validate its format, then open it in
-              WhatsApp. If the chat opens, the number is available — if not,
-              it isn&apos;t.
+              Enter a phone number to see its operator and city, then open it
+              in WhatsApp. If the chat opens, the number is available — if
+              not, it isn&apos;t.
             </p>
           </div>
 
@@ -143,6 +153,32 @@ export function WhatsAppChecker() {
                           <p className="mt-1 text-sm text-ink-600">
                             {result.message}
                           </p>
+                          {checking && lookup === null ? (
+                            <p className="mt-1.5 inline-flex items-center gap-1.5 text-xs text-ink-500">
+                              <Loader2 className="h-3 w-3 animate-spin" />
+                              Looking up carrier &amp; city…
+                            </p>
+                          ) : lookup?.status === "ok" &&
+                            (lookup.data.carrier || lookup.data.location) ? (
+                            <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-ink-600">
+                              {lookup.data.carrier && (
+                                <span className="inline-flex items-center gap-1.5">
+                                  <Building2 className="h-3.5 w-3.5 text-ink-400" />
+                                  <span className="font-medium text-ink-900">
+                                    {lookup.data.carrier}
+                                  </span>
+                                </span>
+                              )}
+                              {lookup.data.location && (
+                                <span className="inline-flex items-center gap-1.5">
+                                  <MapPin className="h-3.5 w-3.5 text-ink-400" />
+                                  <span className="font-medium text-ink-900">
+                                    {lookup.data.location}
+                                  </span>
+                                </span>
+                              )}
+                            </div>
+                          ) : null}
                           <p className="mt-1.5 text-xs text-ink-500">
                             Tap <strong>Open in WhatsApp</strong> below. If the
                             chat opens, the number is available on WhatsApp —
@@ -194,8 +230,8 @@ export function WhatsAppChecker() {
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             {[
               {
-                title: "Validate format",
-                text: "Checks whether the number matches the selected country's dialing rules.",
+                title: "Operator & city",
+                text: "Shows the mobile operator and city for the number, when available.",
               },
               {
                 title: "Open in WhatsApp",
@@ -203,7 +239,7 @@ export function WhatsAppChecker() {
               },
               {
                 title: "Free & private",
-                text: "No sign-up needed. Everything runs in your browser, nothing is stored.",
+                text: "No sign-up needed. Numbers are only used for the lookup, never stored.",
               },
             ].map((item) => (
               <div

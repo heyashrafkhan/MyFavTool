@@ -79,7 +79,25 @@ The WhatsApp checker validates the number format client-side, then provides
 an "Open in WhatsApp" button that opens the number in WhatsApp. If the chat
 loads, the number is registered — if not, it isn't.
 
-No API keys required — everything runs client-side.
+It also shows the **operator (carrier)** and **city** for the number via the
+[Abstract API Phone Validation](https://www.abstractapi.com/phone-validation-api)
+service (free tier: 100 lookups/month).
+
+### Setup (optional)
+
+1. Sign up for a free key at https://www.abstractapi.com/phone-validation-api
+2. Add it as an environment variable:
+
+   ```bash
+   # local development
+   echo "PHONE_VALIDATION_API_KEY=your_key_here" > .env.local
+
+   # Vercel dashboard → Project → Settings → Environment Variables
+   # Name: PHONE_VALIDATION_API_KEY  Value: your_key_here
+   ```
+
+Without a key, the tool gracefully falls back to format-only validation and
+the "Open in WhatsApp" button — operator/city are simply hidden.
 
 ## Scripts
 
