@@ -150,6 +150,24 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      <section className="mt-16">
+        <h2 className="text-xl font-semibold tracking-tight text-ink-900 sm:text-2xl">
+          Developer
+        </h2>
+        <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-ink-200 bg-white p-6 shadow-card sm:flex-row sm:items-center sm:gap-6">
+          <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-ink-900 text-xl font-semibold text-white">
+            AK
+          </span>
+          <div>
+            <h3 className="text-lg font-semibold text-ink-900">Ashraf Khan</h3>
+            <p className="mt-1 text-sm leading-relaxed text-ink-500">
+              Developer of MyFavTool. Built with Next.js, TypeScript and
+              Tailwind CSS — designed to be fast, free and private.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

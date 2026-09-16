@@ -97,7 +97,8 @@ export function SiteFooter() {
             © {year} MyFavTool. All rights reserved.
           </p>
           <p className="text-sm text-ink-400">
-            Built with Next.js &amp; Tailwind CSS.
+            Built with Next.js &amp; Tailwind CSS · Developed by{" "}
+            <span className="font-medium text-ink-600">Ashraf Khan</span>
           </p>
         </div>
       </div>
