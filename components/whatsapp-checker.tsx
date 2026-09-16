@@ -21,7 +21,13 @@ import {
   type CheckResult,
 } from "@/lib/phone";
 
-type WhatsAppStatus = "checking" | "yes" | "no" | "unknown" | null;
+type WhatsAppStatus =
+  | "checking"
+  | "yes"
+  | "no"
+  | "not-configured"
+  | "unknown"
+  | null;
 
 export function WhatsAppChecker() {
   const [countryCode, setCountryCode] = useState("US");
@@ -51,10 +57,8 @@ export function WhatsAppChecker() {
 
     // Step 2: ask the server to check WhatsApp registration
     setWaStatus("checking");
-    const registered = await checkWhatsApp(formatResult.e164);
-    setWaStatus(
-      registered === true ? "yes" : registered === false ? "no" : "unknown",
-    );
+    const outcome = await checkWhatsApp(formatResult.e164);
+    setWaStatus(outcome.status);
     setChecking(false);
   }
 
@@ -200,6 +204,17 @@ export function WhatsAppChecker() {
                           <p className="mt-1 text-sm text-ink-600">
                             This number does not appear to be registered on
                             WhatsApp.
+                          </p>
+                        </>
+                      ) : waStatus === "not-configured" ? (
+                        <>
+                          <p className="text-[15px] font-semibold text-amber-700">
+                            ⚠️ WhatsApp lookup is not enabled yet
+                          </p>
+                          <p className="mt-1 text-sm text-ink-600">
+                            The site owner needs to add a free WhatsApp lookup
+                            API key to enable live checks. Until then, you can
+                            open the number in WhatsApp manually to confirm.
                           </p>
                         </>
                       ) : (

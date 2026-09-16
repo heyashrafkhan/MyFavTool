@@ -240,14 +240,21 @@ export function waLink(e164: string): string {
 export type WhatsAppCheckResponse = {
   registered: boolean | null;
   error?: string;
+  notConfigured?: boolean;
 };
+
+export type WhatsAppCheckOutcome =
+  | { status: "yes" }
+  | { status: "no" }
+  | { status: "not-configured" }
+  | { status: "unknown" };
 
 /**
  * Call our server-side API to check whether a number is registered on
- * WhatsApp. Returns `null` when the check could not be performed (e.g. no
- * API key configured, or the lookup service is unavailable).
+ * WhatsApp. Distinguishes between "not on WhatsApp", "lookup not configured",
+ * and "could not determine".
  */
-export async function checkWhatsApp(e164: string): Promise<boolean | null> {
+export async function checkWhatsApp(e164: string): Promise<WhatsAppCheckOutcome> {
   try {
     const res = await fetch("/api/check-whatsapp", {
       method: "POST",
@@ -255,11 +262,14 @@ export async function checkWhatsApp(e164: string): Promise<boolean | null> {
       body: JSON.stringify({ phone: e164 }),
     });
 
-    if (!res.ok) return null;
+    if (res.status === 501) return { status: "not-configured" };
+    if (!res.ok) return { status: "unknown" };
 
     const data: WhatsAppCheckResponse = await res.json();
-    return data.registered;
+    if (data.registered === true) return { status: "yes" };
+    if (data.registered === false) return { status: "no" };
+    return { status: "unknown" };
   } catch {
-    return null;
+    return { status: "unknown" };
   }
 }

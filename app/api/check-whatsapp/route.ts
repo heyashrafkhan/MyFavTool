@@ -32,10 +32,14 @@ export async function POST(request: NextRequest) {
   const apiKey = process.env.WHATSAPP_API_KEY;
 
   if (!apiKey) {
-    return NextResponse.json({
-      registered: null,
-      error: "WhatsApp lookup is not configured on this deployment.",
-    });
+    return NextResponse.json(
+      {
+        registered: null,
+        error: "WhatsApp lookup is not configured on this deployment.",
+        notConfigured: true,
+      },
+      { status: 501 },
+    );
   }
 
   try {
