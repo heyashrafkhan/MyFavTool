@@ -159,7 +159,7 @@ export function WhatsAppChecker() {
                               Looking up carrier &amp; city…
                             </p>
                           ) : lookup?.status === "ok" &&
-                            (lookup.data.carrier || lookup.data.location) ? (
+                            (lookup.data.carrier || lookup.data.city) ? (
                             <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-ink-600">
                               {lookup.data.carrier && (
                                 <span className="inline-flex items-center gap-1.5">
@@ -169,11 +169,11 @@ export function WhatsAppChecker() {
                                   </span>
                                 </span>
                               )}
-                              {lookup.data.location && (
+                              {lookup.data.city && (
                                 <span className="inline-flex items-center gap-1.5">
                                   <MapPin className="h-3.5 w-3.5 text-ink-400" />
                                   <span className="font-medium text-ink-900">
-                                    {lookup.data.location}
+                                    {lookup.data.city}{lookup.data.region ? `, ${lookup.data.region}` : ""}
                                   </span>
                                 </span>
                               )}

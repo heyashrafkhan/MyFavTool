@@ -2,22 +2,45 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-type AbstractPhoneResponse = {
+/** Raw response shape from Abstract API Phone Intelligence. */
+interface AbstractPhoneIntelligenceResponse {
+  phone_number: string;
+  phone_format: { international: string; national: string };
+  phone_carrier: {
+    name: string | null;
+    line_type: string | null;
+    mcc: number | null;
+    mnc: string | null;
+  };
+  phone_location: {
+    country_name: string | null;
+    country_code: string | null;
+    country_prefix: string | null;
+    region: string | null;
+    city: string | null;
+    timezone: string | null;
+  };
+  phone_validation: {
+    is_valid: boolean;
+    line_status: string | null;
+    is_voip: boolean | null;
+  };
+}
+
+/** Normalised shape returned to the client. */
+interface LookupResult {
   valid: boolean;
-  number: string;
-  local_format: string;
-  international_format: string;
-  country_prefix: string;
-  country_code: string;
-  country_name: string;
-  location: string;
-  carrier: string;
-  line_type: string;
-};
+  carrier: string | null;
+  lineType: string | null;
+  city: string | null;
+  region: string | null;
+  country: string | null;
+  countryCode: string | null;
+}
 
 /**
- * Server-side phone lookup using the Abstract API Phone Validation API.
- * Returns carrier + location (city) for a given E.164 number.
+ * Server-side phone lookup using the Abstract API Phone Intelligence API.
+ * Returns carrier + city + line type for a given E.164 number.
  */
 export async function POST(request: Request) {
   const apiKey = process.env.PHONE_VALIDATION_API_KEY;
@@ -41,7 +64,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const url = new URL("https://phonevalidation.abstractapi.com/v1/");
+    const url = new URL("https://phoneintelligence.abstractapi.com/v1/");
     url.searchParams.set("api_key", apiKey);
     url.searchParams.set("phone", phone);
     const res = await fetch(url.toString());
@@ -53,15 +76,19 @@ export async function POST(request: Request) {
       );
     }
 
-    const data: AbstractPhoneResponse = await res.json();
-    return NextResponse.json({
-      valid: data.valid,
-      carrier: data.carrier || null,
-      location: data.location || null,
-      lineType: data.line_type || null,
-      countryCode: data.country_code || null,
-      countryName: data.country_name || null,
-    });
+    const data: AbstractPhoneIntelligenceResponse = await res.json();
+
+    const result: LookupResult = {
+      valid: data.phone_validation?.is_valid ?? false,
+      carrier: data.phone_carrier?.name ?? null,
+      lineType: data.phone_carrier?.line_type ?? null,
+      city: data.phone_location?.city ?? null,
+      region: data.phone_location?.region ?? null,
+      country: data.phone_location?.country_name ?? null,
+      countryCode: data.phone_location?.country_code ?? null,
+    };
+
+    return NextResponse.json(result);
   } catch {
     return NextResponse.json({ error: "Lookup failed." }, { status: 502 });
   }

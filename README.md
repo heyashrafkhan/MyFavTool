@@ -80,12 +80,12 @@ an "Open in WhatsApp" button that opens the number in WhatsApp. If the chat
 loads, the number is registered — if not, it isn't.
 
 It also shows the **operator (carrier)** and **city** for the number via the
-[Abstract API Phone Validation](https://www.abstractapi.com/phone-validation-api)
+[Abstract API Phone Intelligence](https://www.abstractapi.com/api/phone-intelligence-api)
 service (free tier: 100 lookups/month).
 
 ### Setup (optional)
 
-1. Sign up for a free key at https://www.abstractapi.com/phone-validation-api
+1. Sign up for a free key at https://www.abstractapi.com/api/phone-intelligence-api
 2. Add it as an environment variable:
 
    ```bash

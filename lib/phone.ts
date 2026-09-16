@@ -240,10 +240,11 @@ export function waLink(e164: string): string {
 export type PhoneLookup = {
   valid: boolean;
   carrier: string | null;
-  location: string | null;
   lineType: string | null;
+  city: string | null;
+  region: string | null;
+  country: string | null;
   countryCode: string | null;
-  countryName: string | null;
 };
 
 export type PhoneLookupOutcome =
