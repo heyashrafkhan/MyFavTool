@@ -225,10 +225,10 @@ export function validateNumber(input: string, country: Country): CheckResult {
     national,
     country,
     message: valid
-      ? `Valid ${country.name} number. Ready to check on WhatsApp.`
+      ? `This ${country.name} number has the correct format (${length} digits). Tap below to open it in WhatsApp and confirm it is active.`
       : `Invalid ${country.name} number. Expected ${min}${
           max === min ? "" : `–${max}`
-        } digits.`,
+        } digits, but got ${length}.`,
   };
 }
 

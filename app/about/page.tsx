@@ -76,8 +76,8 @@ export default function AboutPage() {
         </h1>
         <p className="mt-4 text-base leading-relaxed text-ink-500">
           MyFavTool is home to a free WhatsApp Number Checker that lets you
-          validate any phone number and instantly open it in WhatsApp to confirm
-          whether it is active.
+          validate any phone number&apos;s format and instantly open it in
+          WhatsApp so you can manually confirm whether the account is active.
         </p>
         <p className="mt-3 text-base leading-relaxed text-ink-500">
           We built this tool because checking WhatsApp numbers shouldn&apos;t require

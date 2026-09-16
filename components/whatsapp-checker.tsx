@@ -56,7 +56,8 @@ export function WhatsAppChecker() {
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-ink-500">
               Enter a phone number to validate its format and instantly open it
-              in WhatsApp to confirm whether it is active and reachable.
+              in WhatsApp to manually confirm whether it is active and
+              reachable.
             </p>
           </div>
 
@@ -136,12 +137,20 @@ export function WhatsAppChecker() {
                         }`}
                       >
                         {result.valid
-                          ? "Number format is valid"
+                          ? "Number format looks correct"
                           : "Number format is invalid"}
                       </p>
                       <p className="mt-1 text-sm text-ink-600">
                         {result.message}
                       </p>
+                      {result.valid && (
+                        <p className="mt-1.5 text-xs text-ink-500">
+                          ⚠️ This only checks the format — it does{" "}
+                          <strong>not</strong> confirm whether the number is
+                          active on WhatsApp. Tap the button below to verify
+                          manually.
+                        </p>
+                      )}
                       <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-ink-600">
                         <span className="inline-flex items-center gap-1.5">
                           <Phone className="h-3.5 w-3.5 text-ink-400" />
@@ -177,11 +186,11 @@ export function WhatsAppChecker() {
             {[
               {
                 title: "Validate format",
-                text: "Checks the number against the selected country's dialing rules.",
+                text: "Checks whether the number matches the selected country's dialing rules (digit count, etc.).",
               },
               {
-                title: "Confirm on WhatsApp",
-                text: "Opens the number in WhatsApp — if it's registered, the chat appears.",
+                title: "Verify on WhatsApp",
+                text: "Opens the number in WhatsApp — you'll see if the account exists when the chat loads.",
               },
               {
                 title: "Private & free",
