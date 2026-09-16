@@ -73,6 +73,29 @@ Add, remove or edit entries there and the site updates automatically.
 3. Vercel auto-detects Next.js — no configuration needed.
 4. Deploy. The site is fully static-friendly and runs on Vercel's free (Hobby) plan.
 
+## WhatsApp Number Checker
+
+The WhatsApp checker validates the number format client-side, then calls a
+server-side API route (`/api/check-whatsapp`) to determine whether the number
+is actually registered on WhatsApp.
+
+To enable the real WhatsApp lookup, add an **Abstract API** key:
+
+1. Sign up for a free key at https://www.abstractapi.com/whatsapp-api
+   (free tier: 100 lookups/month).
+2. Add it as an environment variable:
+
+   ```bash
+   # local development
+   echo "WHATSAPP_API_KEY=your_key_here" > .env.local
+
+   # Vercel dashboard → Project → Settings → Environment Variables
+   # Name: WHATSAPP_API_KEY  Value: your_key_here
+   ```
+
+Without a key, the tool gracefully falls back to format-only validation and
+shows "could not determine" instead of a false positive.
+
 ## Scripts
 
 ```bash

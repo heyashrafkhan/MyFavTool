@@ -26,15 +26,15 @@ const features = [
   },
   {
     icon: MessageCircle,
-    title: "Open in WhatsApp",
+    title: "Verify on WhatsApp",
     description:
-      "If the format is valid, open the number directly in WhatsApp with a single click to see if the account is active.",
+      "After validating the format, we query WhatsApp to check whether the number is actually registered.",
   },
   {
     icon: Lock,
-    title: "100% private",
+    title: "Private by design",
     description:
-      "Everything runs in your browser. No phone numbers are stored, logged, or sent to any server.",
+      "Phone numbers are only used for the lookup and are never stored, logged, or shared beyond the check.",
   },
   {
     icon: Zap,
@@ -49,13 +49,13 @@ const values = [
     icon: Eye,
     title: "Transparency",
     description:
-      "We explain exactly what the tool does: format validation plus a direct WhatsApp link. No hidden logic.",
+      "We explain exactly what the tool does: format validation plus a server-side WhatsApp lookup. No hidden logic.",
   },
   {
     icon: Heart,
     title: "User-first",
     description:
-      "The tool is free, fast and respects your privacy. Your phone number data never leaves your device.",
+      "The tool is free and fast. Your phone number is only used for the WhatsApp lookup and is never stored.",
   },
   {
     icon: Globe,
@@ -76,13 +76,14 @@ export default function AboutPage() {
         </h1>
         <p className="mt-4 text-base leading-relaxed text-ink-500">
           MyFavTool is home to a free WhatsApp Number Checker that lets you
-          validate any phone number&apos;s format and instantly open it in
-          WhatsApp so you can manually confirm whether the account is active.
+          validate any phone number&apos;s format and then check whether it is
+          actually registered on WhatsApp.
         </p>
         <p className="mt-3 text-base leading-relaxed text-ink-500">
           We built this tool because checking WhatsApp numbers shouldn&apos;t require
-          installing an app, creating an account, or trusting a third-party
-          service with your data. Everything happens right here in your browser.
+          installing an app or creating an account. Just enter a number, and
+          we&apos;ll validate the format and check whether it&apos;s registered on
+          WhatsApp.
         </p>
       </div>
 

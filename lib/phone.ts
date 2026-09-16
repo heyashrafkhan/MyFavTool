@@ -225,7 +225,7 @@ export function validateNumber(input: string, country: Country): CheckResult {
     national,
     country,
     message: valid
-      ? `This ${country.name} number has the correct format (${length} digits). Tap below to open it in WhatsApp and confirm it is active.`
+      ? `This ${country.name} number has the correct format (${length} digits). We'll check if it's on WhatsApp next.`
       : `Invalid ${country.name} number. Expected ${min}${
           max === min ? "" : `–${max}`
         } digits, but got ${length}.`,
@@ -235,4 +235,31 @@ export function validateNumber(input: string, country: Country): CheckResult {
 /** Build a wa.me deep link that opens the number in WhatsApp. */
 export function waLink(e164: string): string {
   return `https://wa.me/${e164.replace(/\D/g, "")}`;
+}
+
+export type WhatsAppCheckResponse = {
+  registered: boolean | null;
+  error?: string;
+};
+
+/**
+ * Call our server-side API to check whether a number is registered on
+ * WhatsApp. Returns `null` when the check could not be performed (e.g. no
+ * API key configured, or the lookup service is unavailable).
+ */
+export async function checkWhatsApp(e164: string): Promise<boolean | null> {
+  try {
+    const res = await fetch("/api/check-whatsapp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone: e164 }),
+    });
+
+    if (!res.ok) return null;
+
+    const data: WhatsAppCheckResponse = await res.json();
+    return data.registered;
+  } catch {
+    return null;
+  }
 }

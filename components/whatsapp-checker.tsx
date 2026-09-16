@@ -6,40 +6,65 @@ import {
   ChevronDown,
   ExternalLink,
   Globe,
+  HelpCircle,
   Loader2,
   MessageCircle,
   Phone,
   ShieldCheck,
   XCircle,
 } from "lucide-react";
-import { countries, validateNumber, waLink, type CheckResult } from "@/lib/phone";
+import {
+  countries,
+  validateNumber,
+  checkWhatsApp,
+  waLink,
+  type CheckResult,
+} from "@/lib/phone";
+
+type WhatsAppStatus = "checking" | "yes" | "no" | "unknown" | null;
 
 export function WhatsAppChecker() {
   const [countryCode, setCountryCode] = useState("US");
   const [number, setNumber] = useState("");
   const [result, setResult] = useState<CheckResult | null>(null);
   const [checking, setChecking] = useState(false);
+  const [waStatus, setWaStatus] = useState<WhatsAppStatus>(null);
 
   const country = useMemo(
     () => countries.find((c) => c.code === countryCode) ?? countries[0],
     [countryCode],
   );
 
-  function handleCheck(event: React.FormEvent<HTMLFormElement>) {
+  async function handleCheck(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setChecking(true);
-    // Simulate a short validation pass so the UI feels responsive.
-    window.setTimeout(() => {
-      setResult(validateNumber(number, country));
+    setWaStatus(null);
+
+    // Step 1: validate format
+    const formatResult = validateNumber(number, country);
+    setResult(formatResult);
+
+    if (!formatResult.valid) {
       setChecking(false);
-    }, 450);
+      return;
+    }
+
+    // Step 2: ask the server to check WhatsApp registration
+    setWaStatus("checking");
+    const registered = await checkWhatsApp(formatResult.e164);
+    setWaStatus(
+      registered === true ? "yes" : registered === false ? "no" : "unknown",
+    );
+    setChecking(false);
   }
 
   function handleNumberChange(value: string) {
-    // Keep only digits, spaces, dashes, parentheses and a leading +.
     const cleaned = value.replace(/[^\d\s\-()+]/g, "");
     setNumber(cleaned);
-    if (result) setResult(null);
+    if (result) {
+      setResult(null);
+      setWaStatus(null);
+    }
   }
 
   return (
@@ -55,9 +80,9 @@ export function WhatsAppChecker() {
               Check a WhatsApp Number
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-ink-500">
-              Enter a phone number to validate its format and instantly open it
-              in WhatsApp to manually confirm whether it is active and
-              reachable.
+              Enter a phone number to check whether it is registered on
+              WhatsApp. We validate the format first, then query WhatsApp to
+              confirm.
             </p>
           </div>
 
@@ -118,39 +143,78 @@ export function WhatsAppChecker() {
             {result && (
               <div
                 className={`border-t px-6 py-6 sm:px-8 ${
-                  result.valid
-                    ? "border-emerald-100 bg-emerald-50/60"
-                    : "border-red-100 bg-red-50/60"
+                  !result.valid
+                    ? "border-red-100 bg-red-50/60"
+                    : waStatus === "yes"
+                      ? "border-emerald-100 bg-emerald-50/60"
+                      : waStatus === "no"
+                        ? "border-red-100 bg-red-50/60"
+                        : "border-amber-100 bg-amber-50/60"
                 }`}
               >
                 <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-start gap-3.5">
-                    {result.valid ? (
-                      <CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0 text-emerald-600" />
-                    ) : (
+                    {!result.valid ? (
                       <XCircle className="mt-0.5 h-6 w-6 shrink-0 text-red-500" />
+                    ) : waStatus === "yes" ? (
+                      <CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0 text-emerald-600" />
+                    ) : waStatus === "no" ? (
+                      <XCircle className="mt-0.5 h-6 w-6 shrink-0 text-red-500" />
+                    ) : (
+                      <HelpCircle className="mt-0.5 h-6 w-6 shrink-0 text-amber-500" />
                     )}
                     <div>
-                      <p
-                        className={`text-[15px] font-semibold ${
-                          result.valid ? "text-emerald-800" : "text-red-700"
-                        }`}
-                      >
-                        {result.valid
-                          ? "Number format looks correct"
-                          : "Number format is invalid"}
-                      </p>
-                      <p className="mt-1 text-sm text-ink-600">
-                        {result.message}
-                      </p>
-                      {result.valid && (
-                        <p className="mt-1.5 text-xs text-ink-500">
-                          ⚠️ This only checks the format — it does{" "}
-                          <strong>not</strong> confirm whether the number is
-                          active on WhatsApp. Tap the button below to verify
-                          manually.
-                        </p>
+                      {!result.valid ? (
+                        <>
+                          <p className="text-[15px] font-semibold text-red-700">
+                            Number format is invalid
+                          </p>
+                          <p className="mt-1 text-sm text-ink-600">
+                            {result.message}
+                          </p>
+                        </>
+                      ) : waStatus === "checking" ? (
+                        <>
+                          <p className="inline-flex items-center gap-2 text-[15px] font-semibold text-amber-700">
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            Checking WhatsApp status…
+                          </p>
+                          <p className="mt-1 text-sm text-ink-600">
+                            Please wait a moment while we verify…
+                          </p>
+                        </>
+                      ) : waStatus === "yes" ? (
+                        <>
+                          <p className="text-[15px] font-semibold text-emerald-800">
+                            ✅ This number IS on WhatsApp
+                          </p>
+                          <p className="mt-1 text-sm text-ink-600">
+                            This number is registered and active on WhatsApp.
+                          </p>
+                        </>
+                      ) : waStatus === "no" ? (
+                        <>
+                          <p className="text-[15px] font-semibold text-red-700">
+                            ❌ This number is NOT on WhatsApp
+                          </p>
+                          <p className="mt-1 text-sm text-ink-600">
+                            This number does not appear to be registered on
+                            WhatsApp.
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-[15px] font-semibold text-amber-700">
+                            ⚠️ Could not determine WhatsApp status
+                          </p>
+                          <p className="mt-1 text-sm text-ink-600">
+                            We couldn&apos;t verify the status right now. You
+                            can still open the number in WhatsApp manually to
+                            confirm.
+                          </p>
+                        </>
                       )}
+
                       <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-ink-600">
                         <span className="inline-flex items-center gap-1.5">
                           <Phone className="h-3.5 w-3.5 text-ink-400" />
@@ -186,15 +250,15 @@ export function WhatsAppChecker() {
             {[
               {
                 title: "Validate format",
-                text: "Checks whether the number matches the selected country's dialing rules (digit count, etc.).",
+                text: "First checks whether the number matches the selected country's dialing rules.",
               },
               {
-                title: "Verify on WhatsApp",
-                text: "Opens the number in WhatsApp — you'll see if the account exists when the chat loads.",
+                title: "WhatsApp lookup",
+                text: "Queries WhatsApp to determine whether the number is registered and active.",
               },
               {
-                title: "Private & free",
-                text: "Everything runs in your browser. No data is stored or sent anywhere.",
+                title: "Free & private",
+                text: "No sign-up needed. Numbers are only used for the lookup and never stored.",
               },
             ].map((item) => (
               <div
